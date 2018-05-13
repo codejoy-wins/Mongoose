@@ -7,6 +7,16 @@
     <title>Home Page </title>
 </head>
 <body>
+
+
+    
+
+    <% if(messages.famous) { %>
+        <%- JSON.stringify(messages) %>
+        <% for (var j of messages.famous) { %>
+        <h3><%= j %></h3>
+        <% } %>
+    <% } %>    
     <h1>Welcome to Quoting Dojo</h1>
     <form action="/quotes" method="POST">
         <p>Name: <input type="text" name="name"></p>

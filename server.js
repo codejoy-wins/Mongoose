@@ -4,14 +4,16 @@ var app = express();
 var bodyParser = require("body-parser");
 var mongoose = require("mongoose");
 var path = require('path');
+var session = require('express-session');
+var flash = require('express-flash');
 //connect to db
 mongoose.connect('mongodb://localhost/new_mongoose');
 // create schema
 
 var QuoteSchema = new mongoose.Schema({
-    name: String,
-    quote: String
-    })
+    name: { type: String, required: true, minlength: 6},
+    quote: { type: String, required: true, minlength: 2}
+    }, {timestamps: true});
     mongoose.model('Quote', QuoteSchema);
     var Quote = mongoose.model('Quote');
 
@@ -28,6 +30,14 @@ var QuoteSchema = new mongoose.Schema({
 
 
 //uses
+app.use(session({
+    secret: 'keyboardkitteh',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { maxAge: 60000 }
+}))
+
+app.use(flash());
 app.use(bodyParser.urlencoded({ extended: true}));
 app.use(express.static(path.join(__dirname, './static')));
 //sets
@@ -54,13 +64,17 @@ app.post('/quotes', function(req, res){
     var quote = new Quote({name: req.body.name, quote: req.body.quote});
     quote.save(function(err) {
         if(err){
-            console.log('mistake');
+            console.log('mistake', err);
+            for (var x in err.errors){
+                req.flash('famous', err.errors[x].message);
+            }
+        res.redirect('/');
         } else {
             console.log('successfully added a quote');
             res.redirect('/quotes');
         }
-    })
-})
+    });
+});
 
 
 
