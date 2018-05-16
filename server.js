@@ -6,8 +6,11 @@ var mongoose = require("mongoose");
 var path = require('path');
 var session = require('express-session');
 var flash = require('express-flash');
-//connect to db
-mongoose.connect('mongodb://localhost/new_mongoose');
+//connect to db  (modularize this?)
+
+require('./server/config/mongoose.js')(app);
+
+// mongoose.connect('mongodb://localhost/new_mongoose');
 // create schema (must export models)
 
 require('./server/models/quote.js')(app);  // ????
@@ -29,9 +32,6 @@ app.set('view engine', 'ejs');
 //routes (have been exported)
 
 require('./server/config/routes.js')(app);
-
-
-
 
 app.listen(8000, function(){
     console.log("listening on 8000");
