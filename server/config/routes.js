@@ -8,6 +8,6 @@ module.exports = function(app){
     
     app.post('/quotes', controller.postQuotes);
 }
-
+// callbacks have been exported to controllers
 
 

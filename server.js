@@ -8,14 +8,9 @@ var session = require('express-session');
 var flash = require('express-flash');
 //connect to db
 mongoose.connect('mongodb://localhost/new_mongoose');
-// create schema
+// create schema (must export models)
 
-var QuoteSchema = new mongoose.Schema({
-    name: { type: String, required: true, minlength: 6},
-    quote: { type: String, required: true, minlength: 2}
-    }, {timestamps: true});
-    mongoose.model('Quote', QuoteSchema);
-    var Quote = mongoose.model('Quote');
+require('./server/models/quote.js')(app);  // ????
 
 //uses
 app.use(session({
@@ -31,7 +26,7 @@ app.use(express.static(path.join(__dirname, './client/static')));
 //sets
 app.set('views', path.join(__dirname, './client/views'));
 app.set('view engine', 'ejs');
-//routes
+//routes (have been exported)
 
 require('./server/config/routes.js')(app);
 
